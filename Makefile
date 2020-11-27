@@ -1,7 +1,7 @@
 # This is copied directly from the Final Project Github Demo. Edits will be needed.
 
 EXENAME = finalproj
-OBJS = readFromFile.o main.o
+OBJS = graph.o readFromFile.o main.o
 
 CXX = clang++
 CXXFLAGS = $(CS225) -std=c++1y -stdlib=libc++ -c -g -O0 -Wall -Wextra -pedantic
