@@ -4,7 +4,11 @@
 int main(int argc, const char* argv[]) {
   FileReader fr;
   Graph g = fr.getAirportData();
-  std::cout << &g << std::endl;
+
+  auto v = g.getVertices();
+  for (const auto& vertex : v) {
+    std::cout << vertex << std::endl;
+  }
 
   return 0;
 }
