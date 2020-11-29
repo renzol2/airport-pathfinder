@@ -1,4 +1,4 @@
-# This is copied directly from the Final Project Github Demo. Edits may be needed.
+# This is copied directly from the Final Project Github Demo. Edits will be needed.
 
 EXENAME = finalproj
 OBJS = readFromFile.o main.o

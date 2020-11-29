@@ -61,9 +61,9 @@ BFS::BFS() : g_(true, true) {
         getline(fin2, airline, ',');
         getline(fin2, airlineID, ','); 
         getline(fin2, source, ',');
-        getline(fin2, sourceID, ','); //Use for source node of an edge;
+        getline(fin2, sourceID, ','); //Use for source vertex of an edge;
         getline(fin2, destination, ',');
-        getline(fin2, destinationID, ','); //Use for destination node of an edge;
+        getline(fin2, destinationID, ','); //Use for destination vertex of an edge;
         getline(fin2, codeshare, ',');
         getline(fin2, stops, ',');
         getline(fin2, equipment);
