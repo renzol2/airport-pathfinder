@@ -6,7 +6,7 @@
 using std::unordered_set;
 using std::unordered_map;
 
-// Written using pseucode from the following source:
+// Written using pseudocode from the following source:
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 
 vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
@@ -55,6 +55,8 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
   return vector<Vertex>();
 }
 
+// FIXME: this should be able to calculate the orthodromic distance of any
+// pair of vertices, regardless of an edge existing. Need to refactor
 double calculateHeuristic(const Graph& g, const Vertex& src,
                           const Vertex& dest) {
   if (g.edgeExists(src, dest)) {
