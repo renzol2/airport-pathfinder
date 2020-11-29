@@ -160,6 +160,8 @@ public:
      */
     int getEdgeWeight(Vertex source, Vertex destination) const;
 
+    double getOrthodromicDistance(Vertex source, Vertex destination) const;
+
     /**
      * Inserts a new vertex into the graph and initializes its label as "".
      * @param v - the name for the vertex
@@ -202,6 +204,10 @@ public:
      *         - if not, return InvalidEdge
      */
     Edge setEdgeWeight(Vertex source, Vertex destination, int weight);
+
+    void setLatLongPairs(Vertex source, Vertex destination, const pair<double, 
+                         double>& sourceCoords, const pair<double, 
+                         double>& destinationCoords);
 
     /**
      * Creates a name for snapshots of the graph.

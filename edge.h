@@ -10,6 +10,7 @@
 #include <limits.h>
 
 using std::string;
+using std::pair;
 
 typedef string Vertex;
 
@@ -24,6 +25,8 @@ class Edge
   public:
     Vertex source; /**< The source of the edge **/
     Vertex dest; /**< The destination of the edge **/
+    pair<double, double> sourceLatLong;
+    pair<double, double> destLatLong;
 
     /**
      * Parameter constructor for unweighted graphs.

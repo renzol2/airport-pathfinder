@@ -58,8 +58,7 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
 double calculateHeuristic(const Graph& g, const Vertex& src,
                           const Vertex& dest) {
   if (g.edgeExists(src, dest)) {
-    // TODO: use long/lat instead of edge weight
-    return g.getEdgeWeight(src, dest);
+    return g.getOrthodromicDistance(src, dest);
   } else {
     return DBL_MAX;
   }

@@ -4,24 +4,75 @@
 #include "astar.h"
 #include "readFromFile.h"
 
-int main(int argc, const char* argv[]) {
-  FileReader fr;
-  Graph g = fr.getAirportData();
+using std::cout;
+using std::endl;
 
+void runBFS(Graph& g) {
   // Calls a BFS traversal which prints out to terminal the airports with at
   // least 100 direct routes to another airport.
   BFS(g);
+}
 
-  // Finds the shortest path between vertices a and b using A*
-  Vertex a = "7504";
-  Vertex b = "246";
-  auto path = getShortestPath(g, a, b);
+void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
+  // Check that source and dest exist in the graph
+  if (!g.vertexExists(src)) {
+    cout << "Source vertex " << src << " does not exist.\n";
+    return;
+  }
 
-  std::cout << "Shortest path from vertices " << a << " to " << b
+  if (!g.vertexExists(dest)) {
+    cout << "Destination vertex " << dest << " does not exist.\n";
+    return;
+  }
+
+  cout << "Calculating shortest path from " << src << " to " << dest << "...\n\n";
+
+  // Run A* 
+  auto path = getShortestPath(g, src, dest);
+
+  if (path.empty()) {
+    cout << "No path was found." << endl;
+    return;
+  }
+
+  cout << "Done!\nShortest path from vertices " << src << " to " << dest
             << " using A* search:\n";
 
+  // Print id of each vertex in path
   for (const auto& v : path) {
-    std::cout << v << std::endl;
+    cout << v << endl;
+  }
+}
+
+/**
+ * CS 225 Final Project
+ * 
+ * Compilation:
+ *   make main
+ * 
+ * Running:
+ *   ./main bfs
+ *   ./main astar {source} {destination}
+ */
+int main(int argc, const char* argv[]) {
+  if (argc == 1) {
+    cout << "! Please specify whether you'd like to use 'bfs' or 'astar'" << endl;
+    return 0;
+  } else if (argc > 1) {
+    FileReader fr;
+    string algo = string(argv[1]);
+
+    if (algo == "bfs") {
+      Graph g = fr.getAirportData();
+      runBFS(g);
+    } else if (algo == "astar") {
+      Graph g = fr.getAirportData();
+      Vertex src = argv[2];
+      Vertex dest = argv[3];
+      runAStar(g, src, dest);
+    } else {
+      cout << "Invalid algorithm. Choose 'bfs' or 'astar'" << endl;
+    }
   }
 
   return 0;

@@ -1,5 +1,8 @@
 //Copied from lab_ml
 
+#include <math.h>
+#include <cmath> 
+
 #include "graph.h"
 
 const Vertex Graph::InvalidVertex = "_CS225INVALIDVERTEX";
@@ -194,6 +197,24 @@ int Graph::getEdgeWeight(Vertex source, Vertex destination) const
     return adjacency_list[source][destination].getWeight();
 }
 
+long double degreesToRadians(const long double degree) { 
+  return (degree * 3.14 / 180);
+} 
+
+double Graph::getOrthodromicDistance(Vertex source, Vertex destination) const {
+  Edge e = adjacency_list[source][destination];
+  double lat1r, lon1r, lat2r, lon2r, u, v;
+  lat1r = degreesToRadians(e.sourceLatLong.first);
+  lon1r = degreesToRadians(e.sourceLatLong.second);
+  lat2r = degreesToRadians(e.destLatLong.first);
+  lon2r = degreesToRadians(e.destLatLong.second);
+
+  u = sin((lat2r - lat1r)/2);
+  v = sin((lon2r - lon1r)/2);
+  const double EARTH_RADIUS_KM = 6371.0;
+  return 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
+}
+
 void Graph::insertVertex(Vertex v)
 {
     // will overwrite if old stuff was there
@@ -291,6 +312,14 @@ Edge Graph::setEdgeWeight(Vertex source, Vertex destination, int weight)
         }
 
     return new_edge;
+}
+
+void Graph::setLatLongPairs(Vertex source, Vertex destination, const pair<double, 
+                         double>& sourceCoords, const pair<double, 
+                         double>& destinationCoords) {
+  Edge& e = adjacency_list[source][destination];
+  e.sourceLatLong = sourceCoords;
+  e.destLatLong = destinationCoords;
 }
 
 bool Graph::assertVertexExists(Vertex v, string functionName) const

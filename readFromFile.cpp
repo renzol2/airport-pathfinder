@@ -1,10 +1,14 @@
 #include "readFromFile.h"
 #include <fstream>
 #include <string>
+#include <unordered_map>
+#include <cfloat>
 
 using std::fstream;
 using std::ios;
 using std::stringstream;
+using std::unordered_map;
+using std::pair;
 
 FileReader::FileReader() {}
 
@@ -21,12 +25,11 @@ Graph FileReader::getAirportData() {
 
     //The 14 entries in each row of airports.dat.txt
     string airportID, name, city, country, IATA, ICAO, latitude, longitude, altitude, timezone, DST, tz, type, source_airport;
+    
+    // A temporary map to store lat long coordinates
+    unordered_map<string, pair<double, double>> idToLatLong;
 
     while (airportsLines > 0) {
-        getline(fin, airportLine);
-
-        stringstream s(airportLine);
-
         getline(fin, airportID, ','); //Use for the name of the vertex. Each unique number represents an airport.
         getline(fin, name, ',');
         getline(fin, city, ',');
@@ -44,10 +47,11 @@ Graph FileReader::getAirportData() {
 
         g.insertVertex(airportID); //Creates a vertex with label set to the airport's ID
         
+        // Store the airport's lat long coordinates
+        idToLatLong[airportID] = { std::stod(latitude), std::stod(longitude) };
         airportsLines--;
     }
 
-    
     //Read in the routes as edges between vertices
     fstream fin2; //Note: not sure this it's necessary to declare another fstream for another file. Doing it to be safe.
 
@@ -78,8 +82,19 @@ Graph FileReader::getAirportData() {
         if (g.edgeExists(sourceID, destinationID)) {
             g.setEdgeWeight(sourceID, destinationID, g.getEdgeWeight(sourceID, destinationID) + 1);
         } else {
+            // If lat/long coords aren't found, avoid adding this edge
+            if (idToLatLong.find(sourceID) == idToLatLong.end() 
+                || idToLatLong.find(destinationID) == idToLatLong.end()) {
+                continue;
+            }
+
             g.insertEdge(sourceID, destinationID);
             g.setEdgeWeight(sourceID, destinationID, 1);
+
+            // Set the lat/long coords
+            g.setLatLongPairs(sourceID, destinationID, 
+                                idToLatLong.at(sourceID), 
+                                idToLatLong.at(destinationID));
         }
         
         routesLines--;
