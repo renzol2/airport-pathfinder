@@ -45,7 +45,7 @@ BFS::BFS() : g_(true, true) {
     //Read in the routes as edges between vertices
     fstream fin2; //Note: not sure this it's necessary to declare another fstream for another file. Doing it to be safe.
 
-    fin.open("routes.dat.txt", ios::in);
+    fin2.open("routes.dat.txt", ios::in);
 
     int routesLines = 67663;
     string routeLine;
