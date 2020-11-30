@@ -16,7 +16,7 @@ BFS::BFS() : g_(true, true) {
     //The 14 entries in each row of airports.dat.txt
     string airportID, name, city, country, IATA, ICAO, latitude, longitude, altitude, timezone, DST, tz, type, source;
 
-    while (airportsLines >= 0) {
+    while (airportsLines > 0) {
         getline(fin, airportLine);
 
         stringstream s(airportLine);
@@ -53,7 +53,7 @@ BFS::BFS() : g_(true, true) {
     //The nine entries in each row of routes.dat.txt
     string airline, airlineID, source, sourceID, destination, destinationID, codeshare, stops, equipment;
 
-    while (routesLines >= 0) {
+    while (routesLines > 0) {
         getline(fin2, routeLine);
 
         stringstream s(routeLine);
