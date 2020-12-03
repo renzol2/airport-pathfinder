@@ -3,21 +3,11 @@
 #include "graph.h"
 #include "edge.h"
 
+#include <map>
 
-class BFS {
-    public:
-        /**
-         * Constructor to read CSV of airports and routes into a graph of nodes and edges
-         */
-        BFS();
+void BFS(Graph g);
 
-        BFS(Graph g);
+void BFS(Graph g, Vertex v);
 
-        BFS(Graph g, Vertex v);
-        
-    private:
-    
-    Graph g_;
+static std::map<Vertex, int> visitedVertices;
 
-    map<Vertex, int> visitedVertices;
-};

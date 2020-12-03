@@ -1,7 +1,7 @@
 # This is copied directly from the Final Project Github Demo. Edits will be needed.
 
-EXENAME = finalproj
-OBJS = graph.o readFromFile.o main.o
+EXENAME = main
+OBJS = graph.o readFromFile.o BFS.o main.o 
 
 CXX = clang++
 CXXFLAGS = $(CS225) -std=c++1y -stdlib=libc++ -c -g -O0 -Wall -Wextra -pedantic
@@ -32,11 +32,17 @@ output_msg: ; $(CLANG_VERSION_MSG)
 $(EXENAME): output_msg $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXENAME)
 
-readFromFile.o: main.cpp readFromFile.cpp
-	$(CXX) $(CXXFLAGS) main.cpp readFromFile.cpp
+readFromFile.o: readFromFile.cpp readFromFile.h
+	$(CXX) $(CXXFLAGS) readFromFile.cpp
 
-test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp
-	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp $(LDFLAGS) -o test
+main.o: main.cpp readFromFile.h BFS.h
+	$(CXX) $(CXXFLAGS) main.cpp
+
+BFS.o: BFS.cpp BFS.h
+	$(CXX) $(CXXFLAGS) BFS.cpp
+
+test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp
+	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp $(LDFLAGS) -o test
 
 clean:
 	-rm -f *.o $(EXENAME) test
