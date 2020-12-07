@@ -52,6 +52,7 @@ using std::make_pair;
 using std::unordered_map;
 
 // Override hash functionality for Vertex
+// https://prateekvjoshi.com/2014/06/05/using-hash-function-in-c-for-user-defined-classes/
 namespace std {
   template<>
   struct hash<Vertex> {
@@ -168,8 +169,6 @@ public:
      *         - if doesn't, return InvalidWeight
      */
     int getEdgeWeight(Vertex source, Vertex destination) const;
-
-    double getOrthodromicDistance(Vertex source, Vertex destination) const;
 
     /**
      * Inserts a new vertex into the graph and initializes its label as "".

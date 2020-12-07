@@ -25,9 +25,6 @@ Graph FileReader::getAirportData() {
 
     //The 14 entries in each row of airports.dat.txt
     string airportID, name, city, country, IATA, ICAO, latitude, longitude, altitude, timezone, DST, tz, type, source_airport;
-    
-    // A temporary map to store lat long coordinates
-    unordered_map<string, pair<double, double>> idToLatLong;
 
     while (airportsLines > 0) {
         getline(fin, airportID, ','); //Use for the name of the vertex. Each unique number represents an airport.
@@ -45,10 +42,10 @@ Graph FileReader::getAirportData() {
         getline(fin, type, ',');
         getline(fin, source_airport);
 
-        g.insertVertex(airportID); //Creates a vertex with label set to the airport's ID
+        //Creates a vertex with label set to the airport's ID
+        Vertex v(airportID, std::stod(latitude), std::stod(longitude));
+        g.insertVertex(v); 
         
-        // Store the airport's lat long coordinates
-        idToLatLong[airportID] = { std::stod(latitude), std::stod(longitude) };
         airportsLines--;
     }
 
@@ -78,23 +75,13 @@ Graph FileReader::getAirportData() {
         getline(fin2, stops, ',');
         getline(fin2, equipment);
         
-        //If a route already exists between the airports, adds 1 to the weight. Otherwise it creates an edge.
+        // If a route already exists between the airports, adds 1 to the weight. 
+        // Otherwise it creates an edge.
         if (g.edgeExists(sourceID, destinationID)) {
             g.setEdgeWeight(sourceID, destinationID, g.getEdgeWeight(sourceID, destinationID) + 1);
         } else {
-            // If lat/long coords aren't found, avoid adding this edge
-            if (idToLatLong.find(sourceID) == idToLatLong.end() 
-                || idToLatLong.find(destinationID) == idToLatLong.end()) {
-                continue;
-            }
-
             g.insertEdge(sourceID, destinationID);
             g.setEdgeWeight(sourceID, destinationID, 1);
-
-            // Set the lat/long coords
-            g.setLatLongPairs(sourceID, destinationID, 
-                                idToLatLong.at(sourceID), 
-                                idToLatLong.at(destinationID));
         }
         
         routesLines--;

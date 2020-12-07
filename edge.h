@@ -12,22 +12,31 @@
 using std::string;
 using std::pair;
 struct Vertex {
-  Vertex() : label(""), latitude(0), longitude(0) {}
-  Vertex(const string& s) : label(s), latitude(0), longitude(0) {}
+  Vertex() 
+    : label(""), latitude(0), longitude(0) {}
+  Vertex(const string& s) 
+    : label(s), latitude(0), longitude(0) {}
+  Vertex(const string& s, double setLat, double setLong) 
+    : label(s), latitude(setLat), longitude(setLong) {}
+  
   string label;
   double latitude;
   double longitude;
+  
   bool operator==(const Vertex& other) const {
     return label == other.label 
       && latitude == other.latitude 
       && longitude == other.longitude;
   }
+
   bool operator!=(const Vertex& other) const {
     return !(*this == other);
   }
+
   bool operator<(const Vertex& other) const {
     return label < other.label;
   }
+
   bool empty() const { return label.empty(); }
 };
 

@@ -63,9 +63,11 @@ int main(int argc, const char* argv[]) {
     string algo = string(argv[1]);
 
     if (algo == "bfs") {
+      cout << "Running BFS...\n";
       Graph g = fr.getAirportData();
       runBFS(g);
     } else if (algo == "astar") {
+      cout << "Running A*...\n";
       Graph g = fr.getAirportData();
       Vertex src(argv[2]);
       Vertex dest(argv[3]);

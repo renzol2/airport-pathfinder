@@ -197,24 +197,6 @@ int Graph::getEdgeWeight(Vertex source, Vertex destination) const
     return adjacency_list[source][destination].getWeight();
 }
 
-long double degreesToRadians(const long double degree) { 
-  return (degree * 3.14 / 180);
-} 
-
-double Graph::getOrthodromicDistance(Vertex source, Vertex destination) const {
-  Edge e = adjacency_list[source][destination];
-  double lat1r, lon1r, lat2r, lon2r, u, v;
-  lat1r = degreesToRadians(e.sourceLatLong.first);
-  lon1r = degreesToRadians(e.sourceLatLong.second);
-  lat2r = degreesToRadians(e.destLatLong.first);
-  lon2r = degreesToRadians(e.destLatLong.second);
-
-  u = sin((lat2r - lat1r)/2);
-  v = sin((lon2r - lon1r)/2);
-  const double EARTH_RADIUS_KM = 6371.0;
-  return 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
-}
-
 void Graph::insertVertex(Vertex v)
 {
     // will overwrite if old stuff was there
