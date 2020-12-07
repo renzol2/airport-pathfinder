@@ -27,6 +27,8 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
     return;
   }
 
+  cout << "Adjacents from src: " << g.getAdjacent(src).size() << endl;
+  cout << "Adjacents from dest: " << g.getAdjacent(dest).size() << endl;
   cout << "Calculating shortest path from " << src.label << " to " << dest.label << "...\n\n";
 
   // Run A* 

@@ -14,12 +14,13 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
   // Keeps track of where a vertex's source
   unordered_map<Vertex, Vertex> cameFrom;
 
-  // g(vertex) = f(vertex) + h(vertex)
+  // g(n) is cost of the cheapest path from src to n
   unordered_map<Vertex, double> gScores;
   gScores[src] = 0;
 
+  // f(n) = g(n) + h(n)
   unordered_map<Vertex, double> fScores;
-  fScores[src] = calculateHeuristic(graph, src, dest);
+  fScores[src] = calculateHeuristic(src, dest);
 
   // The open list of vertices that must be explored
   unordered_set<Vertex> openList;
@@ -44,7 +45,7 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
       if (gCurrent < gScores[neighbor]) {
         cameFrom[neighbor] = current;
         gScores[neighbor] = gCurrent;
-        fScores[neighbor] = gScores[neighbor] + calculateHeuristic(graph, current, neighbor);
+        fScores[neighbor] = gScores[neighbor] + calculateHeuristic(current, dest);
         if (openList.find(neighbor) == openList.end()) {
           openList.insert(neighbor);
         }
@@ -55,8 +56,7 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
   return vector<Vertex>();
 }
 
-double calculateHeuristic(const Graph& g, const Vertex& src,
-                          const Vertex& dest) {
+double calculateHeuristic(const Vertex& src, const Vertex& dest) {
   return getOrthodromicDistance(src, dest);
 }
 

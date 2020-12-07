@@ -16,10 +16,9 @@ vector<Vertex> getShortestPath(const Graph& g, const Vertex& src,
                              const Vertex& dest);
 
 /**
- * Calculates the heuristic value of a vertex based on its destination.
+ * Calculates the heuristic value of a vertex based on the destination.
  */
-double calculateHeuristic(const Graph& g, const Vertex& src,
-                          const Vertex& dest);
+double calculateHeuristic(const Vertex& src, const Vertex& dest);
 
 /**
  * Finds the vertex in the open list with the lowest f score
@@ -33,7 +32,14 @@ Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
 vector<Vertex> reconstructPath(const unordered_map<Vertex, Vertex>& cameFrom,
                              const Vertex& dest);
 
+/**
+ * Converts degrees to radians
+ */
 long double degreesToRadians(const long double degree);
 
+/**
+ * Calculates distance between two vertices (lat/long pairs) in km
+ * https://stackoverflow.com/questions/10198985/calculating-the-distance-between-2-latitudes-and-longitudes-that-are-saved-in-a
+ */
 double getOrthodromicDistance(const Vertex& source, const Vertex& destination);
 
