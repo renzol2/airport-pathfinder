@@ -7,10 +7,12 @@
 using std::cout;
 using std::endl;
 
-void runBFS(Graph& g) {
+void runBFS(Graph& g, int directRoutes) {
   // Calls a BFS traversal which prints out to terminal the airports with at
   // least 100 direct routes to another airport.
-  BFS(g);
+  cout << "Printing airports with at least " << directRoutes 
+       << " direct routes to another airport...\n\n";
+  BFS(g, directRoutes);
 }
 
 void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
@@ -48,11 +50,11 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
  * CS 225 Final Project
  * 
  * Compilation:
- *   make main
+ *   make
  * 
  * Running:
- *   ./main bfs
- *   ./main astar {sourceID} {destinationID}
+ *   ./main bfs { directRoutes (default=100) }
+ *   ./main astar { sourceID (required) } { destinationID (required) }
  */
 int main(int argc, const char* argv[]) {
   if (argc == 1) {
@@ -69,10 +71,25 @@ int main(int argc, const char* argv[]) {
 
     string algo = string(argv[1]);
 
+    // Determine which algorithm to run
     if (algo == "bfs") {
       cout << "Running BFS...\n";
-      runBFS(g);
-    } else if (algo == "astar") {
+
+      // Get arguments
+      int directRoutes;
+      const int DefaultDirectRoutes = 100;
+
+      if (argc > 2) {
+        string directRoutesArg = argv[2];
+        directRoutes = std::stoi(directRoutesArg);
+      } else {
+        directRoutes = DefaultDirectRoutes;
+      }
+
+      // Run BFS on Graph
+      runBFS(g, directRoutes);
+    } 
+    else if (algo == "astar") {
       cout << "Running A*...\n";
 
       // Get arguments
@@ -89,7 +106,8 @@ int main(int argc, const char* argv[]) {
 
       // Run A*
       runAStar(g, src, dest);
-    } else {
+    } 
+    else {
       cout << "Invalid algorithm. Choose 'bfs' or 'astar'" << endl;
     }
   }

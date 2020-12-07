@@ -5,9 +5,9 @@
 
 #include <map>
 
-void BFS(Graph g);
+void BFS(Graph g, int directRoutes);
 
-void BFS(Graph g, Vertex v);
+void BFS(Graph g, Vertex v, int directRoutes);
 
 static std::map<Vertex, int> visitedVertices;
 
