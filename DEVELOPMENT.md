@@ -7,3 +7,9 @@ This week, we set up the initial files for the project. We copied the files from
 Week of 11/30/20
 
 In the second week of the project, we succeeded in reading basic data from a CSV format into a graph structure. We also completed the code for a Breadth First Search traversal of the graph which, for the time being, prints the airports with at least 100 connections to other unique airports. 
+
+We also began the implementation of A* search, which will replace the Landmark Path algorithm as our Complex/Uncovered option.
+
+Week of 12/7/20
+
+Int he third week of the project, we finished our implementation of A* search by refactoring the original Graph implementation and using latitude/longitude coordinates as a heuristic. We also implemented better command line functionality to our application, allowing the user to choose parameters for BFS and A*. 
