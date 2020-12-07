@@ -11,8 +11,25 @@
 
 using std::string;
 using std::pair;
-
-typedef string Vertex;
+struct Vertex {
+  Vertex() : label(""), latitude(0), longitude(0) {}
+  Vertex(const string& s) : label(s), latitude(0), longitude(0) {}
+  string label;
+  double latitude;
+  double longitude;
+  bool operator==(const Vertex& other) const {
+    return label == other.label 
+      && latitude == other.latitude 
+      && longitude == other.longitude;
+  }
+  bool operator!=(const Vertex& other) const {
+    return !(*this == other);
+  }
+  bool operator<(const Vertex& other) const {
+    return label < other.label;
+  }
+  bool empty() const { return label.empty(); }
+};
 
 /**
  * Represents an edge in a graph; used by the Graph class.

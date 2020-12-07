@@ -16,16 +16,16 @@ void runBFS(Graph& g) {
 void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
   // Check that source and dest exist in the graph
   if (!g.vertexExists(src)) {
-    cout << "Source vertex " << src << " does not exist.\n";
+    cout << "Source vertex " << src.label << " does not exist.\n";
     return;
   }
 
   if (!g.vertexExists(dest)) {
-    cout << "Destination vertex " << dest << " does not exist.\n";
+    cout << "Destination vertex " << dest.label << " does not exist.\n";
     return;
   }
 
-  cout << "Calculating shortest path from " << src << " to " << dest << "...\n\n";
+  cout << "Calculating shortest path from " << src.label << " to " << dest.label << "...\n\n";
 
   // Run A* 
   auto path = getShortestPath(g, src, dest);
@@ -35,12 +35,12 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
     return;
   }
 
-  cout << "Done!\nShortest path from vertices " << src << " to " << dest
+  cout << "Done!\nShortest path from vertices " << src.label << " to " << dest.label
             << " using A* search:\n";
 
   // Print id of each vertex in path
   for (const auto& v : path) {
-    cout << v << endl;
+    cout << v.label << endl;
   }
 }
 
@@ -67,8 +67,8 @@ int main(int argc, const char* argv[]) {
       runBFS(g);
     } else if (algo == "astar") {
       Graph g = fr.getAirportData();
-      Vertex src = argv[2];
-      Vertex dest = argv[3];
+      Vertex src(argv[2]);
+      Vertex dest(argv[3]);
       runAStar(g, src, dest);
     } else {
       cout << "Invalid algorithm. Choose 'bfs' or 'astar'" << endl;
