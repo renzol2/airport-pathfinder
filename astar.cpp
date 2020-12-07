@@ -55,15 +55,9 @@ vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
   return vector<Vertex>();
 }
 
-// FIXME: this should be able to calculate the orthodromic distance of any
-// pair of vertices, regardless of an edge existing. Need to refactor
 double calculateHeuristic(const Graph& g, const Vertex& src,
                           const Vertex& dest) {
-  if (g.edgeExists(src, dest)) {
-    return g.getOrthodromicDistance(src, dest);
-  } else {
-    return DBL_MAX;
-  }
+  return getOrthodromicDistance(src, dest);
 }
 
 Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
@@ -89,4 +83,21 @@ vector<Vertex> reconstructPath(const unordered_map<Vertex, Vertex>& cameFrom,
   
   std::reverse(path.begin(), path.end());
   return path;
+}
+
+long double degreesToRadians(const long double degree) { 
+  return (degree * 3.14 / 180);
+} 
+
+double getOrthodromicDistance(const Vertex& source, const Vertex& destination)  {
+  double lat1r, lon1r, lat2r, lon2r, u, v;
+  lat1r = degreesToRadians(source.latitude);
+  lon1r = degreesToRadians(source.longitude);
+  lat2r = degreesToRadians(destination.latitude);
+  lon2r = degreesToRadians(destination.longitude);
+
+  u = sin((lat2r - lat1r)/2);
+  v = sin((lon2r - lon1r)/2);
+  const double EARTH_RADIUS_KM = 6371.0;
+  return 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
 }

@@ -38,7 +38,7 @@ void BFS(Graph g, Vertex v) {
 
         //BFS traverses the graph and prints the airports that have direct routes to at least 100 other airports.
         if (g.getAdjacent(vert).size() >= 100) {
-            cout << vert.label << endl;
+            cout << vert.label << ": " << vert.name << '\n';
         }
 
         for (Vertex w : g.getAdjacent(vert)) {

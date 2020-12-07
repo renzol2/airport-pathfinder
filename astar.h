@@ -32,3 +32,8 @@ Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
  */
 vector<Vertex> reconstructPath(const unordered_map<Vertex, Vertex>& cameFrom,
                              const Vertex& dest);
+
+long double degreesToRadians(const long double degree);
+
+double getOrthodromicDistance(const Vertex& source, const Vertex& destination);
+
