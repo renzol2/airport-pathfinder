@@ -51,17 +51,6 @@ using std::pair;
 using std::make_pair;
 using std::unordered_map;
 
-// Override hash functionality for Vertex
-// https://prateekvjoshi.com/2014/06/05/using-hash-function-in-c-for-user-defined-classes/
-namespace std {
-  template<>
-  struct hash<Vertex> {
-    size_t operator()(const Vertex& v) const {
-      return hash<string>()(v.label);
-    }
-  };
-}  // namespace std
-
 /**
  * Represents a graph; used by the GraphTools class.
  *

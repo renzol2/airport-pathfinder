@@ -40,7 +40,7 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
 
   // Print id of each vertex in path
   for (const auto& v : path) {
-    cout << v.label << endl;
+    cout << v.label << ": " << v.name << endl;
   }
 }
 
@@ -52,7 +52,7 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
  * 
  * Running:
  *   ./main bfs
- *   ./main astar {source} {destination}
+ *   ./main astar {sourceID} {destinationID}
  */
 int main(int argc, const char* argv[]) {
   if (argc == 1) {
@@ -60,17 +60,34 @@ int main(int argc, const char* argv[]) {
     return 0;
   } else if (argc > 1) {
     FileReader fr;
+    Graph g = fr.getAirportData();
+    auto vertices = g.getVertices();
+
+    cout << "Data imported successfully." << endl;
+    cout << "Total vertices: " << vertices.size() << endl;
+    cout << "Total edges: " << g.getEdges().size() << '\n' << endl;
+
     string algo = string(argv[1]);
 
     if (algo == "bfs") {
       cout << "Running BFS...\n";
-      Graph g = fr.getAirportData();
       runBFS(g);
     } else if (algo == "astar") {
       cout << "Running A*...\n";
-      Graph g = fr.getAirportData();
-      Vertex src(argv[2]);
-      Vertex dest(argv[3]);
+
+      // Get arguments
+      string sourceId = argv[2];
+      string destId = argv[3];
+
+      // Find vertices from arguments
+      Vertex src;
+      Vertex dest;
+      for (const auto& v : vertices) {
+        if (v.label == sourceId) src = v;
+        if (v.label == destId) dest = v;
+      }
+
+      // Run A*
       runAStar(g, src, dest);
     } else {
       cout << "Invalid algorithm. Choose 'bfs' or 'astar'" << endl;

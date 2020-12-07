@@ -13,13 +13,14 @@ using std::string;
 using std::pair;
 struct Vertex {
   Vertex() 
-    : label(""), latitude(0), longitude(0) {}
+    : label(""), name(""), latitude(0), longitude(0) {}
   Vertex(const string& s) 
-    : label(s), latitude(0), longitude(0) {}
-  Vertex(const string& s, double setLat, double setLong) 
-    : label(s), latitude(setLat), longitude(setLong) {}
+    : label(s), name(""), latitude(0), longitude(0) {}
+  Vertex(const string& s, const string& setName, double setLat, double setLong) 
+    : label(s), name(setName), latitude(setLat), longitude(setLong) {}
   
   string label;
+  string name;
   double latitude;
   double longitude;
   
@@ -39,6 +40,17 @@ struct Vertex {
 
   bool empty() const { return label.empty(); }
 };
+
+// Override hash functionality for Vertex
+// https://prateekvjoshi.com/2014/06/05/using-hash-function-in-c-for-user-defined-classes/
+namespace std {
+  template<>
+  struct hash<Vertex> {
+    size_t operator()(const Vertex& v) const {
+      return hash<string>()(v.label);
+    }
+  };
+}  // namespace std
 
 /**
  * Represents an edge in a graph; used by the Graph class.
