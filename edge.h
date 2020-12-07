@@ -10,8 +10,47 @@
 #include <limits.h>
 
 using std::string;
+using std::pair;
+struct Vertex {
+  Vertex() 
+    : label(""), name(""), latitude(0), longitude(0) {}
+  Vertex(const string& s) 
+    : label(s), name(""), latitude(0), longitude(0) {}
+  Vertex(const string& s, const string& setName, double setLat, double setLong) 
+    : label(s), name(setName), latitude(setLat), longitude(setLong) {}
+  
+  string label;
+  string name;
+  double latitude;
+  double longitude;
+  
+  bool operator==(const Vertex& other) const {
+    return label == other.label 
+      && latitude == other.latitude 
+      && longitude == other.longitude;
+  }
 
-typedef string Vertex;
+  bool operator!=(const Vertex& other) const {
+    return !(*this == other);
+  }
+
+  bool operator<(const Vertex& other) const {
+    return label < other.label;
+  }
+
+  bool empty() const { return label.empty(); }
+};
+
+// Override hash functionality for Vertex
+// https://prateekvjoshi.com/2014/06/05/using-hash-function-in-c-for-user-defined-classes/
+namespace std {
+  template<>
+  struct hash<Vertex> {
+    size_t operator()(const Vertex& v) const {
+      return hash<string>()(v.label);
+    }
+  };
+}  // namespace std
 
 /**
  * Represents an edge in a graph; used by the Graph class.
@@ -24,6 +63,8 @@ class Edge
   public:
     Vertex source; /**< The source of the edge **/
     Vertex dest; /**< The destination of the edge **/
+    pair<double, double> sourceLatLong;
+    pair<double, double> destLatLong;
 
     /**
      * Parameter constructor for unweighted graphs.

@@ -1,10 +1,14 @@
 #include "readFromFile.h"
 #include <fstream>
 #include <string>
+#include <unordered_map>
+#include <cfloat>
 
 using std::fstream;
 using std::ios;
 using std::stringstream;
+using std::unordered_map;
+using std::pair;
 
 FileReader::FileReader() {}
 
@@ -22,11 +26,10 @@ Graph FileReader::getAirportData() {
     //The 14 entries in each row of airports.dat.txt
     string airportID, name, city, country, IATA, ICAO, latitude, longitude, altitude, timezone, DST, tz, type, source_airport;
 
+    // Map to ensure Vertex keys are added with other data
+    unordered_map<string, Vertex> idVertexMap;
+
     while (airportsLines > 0) {
-        getline(fin, airportLine);
-
-        stringstream s(airportLine);
-
         getline(fin, airportID, ','); //Use for the name of the vertex. Each unique number represents an airport.
         getline(fin, name, ',');
         getline(fin, city, ',');
@@ -42,12 +45,14 @@ Graph FileReader::getAirportData() {
         getline(fin, type, ',');
         getline(fin, source_airport);
 
-        g.insertVertex(airportID); //Creates a vertex with label set to the airport's ID
+        //Creates a vertex with label set to the airport's ID
+        Vertex v(airportID, name, std::stod(latitude), std::stod(longitude));
+        g.insertVertex(v);
+        idVertexMap[airportID] = v;
         
         airportsLines--;
     }
 
-    
     //Read in the routes as edges between vertices
     fstream fin2; //Note: not sure this it's necessary to declare another fstream for another file. Doing it to be safe.
 
@@ -74,14 +79,24 @@ Graph FileReader::getAirportData() {
         getline(fin2, stops, ',');
         getline(fin2, equipment);
         
-        //If a route already exists between the airports, adds 1 to the weight. Otherwise it creates an edge.
-        if (g.edgeExists(sourceID, destinationID)) {
-            g.setEdgeWeight(sourceID, destinationID, g.getEdgeWeight(sourceID, destinationID) + 1);
-        } else {
-            g.insertEdge(sourceID, destinationID);
-            g.setEdgeWeight(sourceID, destinationID, 1);
+        // Edge cannot exist if either source or dest wasn't found
+        if (idVertexMap.find(sourceID) == idVertexMap.end() 
+          || idVertexMap.find(destinationID) == idVertexMap.end()) {
+          routesLines--;
+          continue;
         }
-        
+
+        // If a route already exists between the airports, adds 1 to the weight. 
+        // Otherwise it creates an edge.
+        Vertex src = idVertexMap.at(sourceID);
+        Vertex dest = idVertexMap.at(destinationID);
+        if (g.edgeExists(src, dest)) {
+            g.setEdgeWeight(src, dest, g.getEdgeWeight(src, dest) + 1);
+        } else {
+            g.insertEdge(src, dest);
+            g.setEdgeWeight(src, dest, 1);
+        }
+
         routesLines--;
     }
 

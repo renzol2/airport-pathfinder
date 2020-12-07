@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void BFS(Graph g) {
+void BFS(Graph g, int directRoutes) {
     for (Vertex v : g.getVertices()) {
         pair<Vertex, int> p;
         p.first = v;
@@ -20,12 +20,12 @@ void BFS(Graph g) {
 
     for (Vertex v : g.getVertices()) {
         if (visitedVertices[v] == 0) {
-            BFS(g, v);
+            BFS(g, v, directRoutes);
         }
     }
 }
 
-void BFS(Graph g, Vertex v) {
+void BFS(Graph g, Vertex v, int directRoutes) {
     queue<Vertex> q;
 
     visitedVertices[v] = 1; //Setting vertex to visited.
@@ -36,9 +36,9 @@ void BFS(Graph g, Vertex v) {
         Vertex vert = q.front();
         q.pop();
 
-        //BFS traverses the graph and prints the airports that have direct routes to at least 100 other airports.
-        if (g.getAdjacent(vert).size() >= 100) {
-            cout << vert << endl;
+        //BFS traverses the graph and prints the airports that have direct routes to at least n other airports.
+        if (g.getAdjacent(vert).size() >= directRoutes) {
+            cout << vert.label << ": " << vert.name << '\n';
         }
 
         for (Vertex w : g.getAdjacent(vert)) {

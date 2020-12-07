@@ -1,1 +1,0 @@
-//Use for Landmark Path cpp file.

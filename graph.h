@@ -51,7 +51,6 @@ using std::pair;
 using std::make_pair;
 using std::unordered_map;
 
-
 /**
  * Represents a graph; used by the GraphTools class.
  *
@@ -202,6 +201,10 @@ public:
      *         - if not, return InvalidEdge
      */
     Edge setEdgeWeight(Vertex source, Vertex destination, int weight);
+
+    void setLatLongPairs(Vertex source, Vertex destination, const pair<double, 
+                         double>& sourceCoords, const pair<double, 
+                         double>& destinationCoords);
 
     /**
      * Creates a name for snapshots of the graph.
