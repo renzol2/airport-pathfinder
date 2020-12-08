@@ -1,7 +1,7 @@
 # This is copied directly from the Final Project Github Demo. Edits will be needed.
 
 EXENAME = main
-OBJS = graph.o readFromFile.o BFS.o main.o 
+OBJS = graph.o readFromFile.o BFS.o main.o shortestpath.o
 
 CXX = clang++
 CXXFLAGS = $(CS225) -std=c++1y -stdlib=libc++ -c -g -O0 -Wall -Wextra -pedantic
@@ -40,6 +40,9 @@ main.o: main.cpp readFromFile.h BFS.h
 
 BFS.o: BFS.cpp BFS.h
 	$(CXX) $(CXXFLAGS) BFS.cpp
+
+shortestpath.o: shortestpath.cpp shortestpath.h
+	$(CXX) $(CXXFLAGS) shortestpath.cpp
 
 test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp
 	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp $(LDFLAGS) -o test
