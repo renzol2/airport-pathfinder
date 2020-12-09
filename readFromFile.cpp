@@ -9,18 +9,19 @@ using std::ios;
 using std::stringstream;
 using std::unordered_map;
 using std::pair;
+using std::string;
 
 FileReader::FileReader() {}
 
-Graph FileReader::getAirportData() {
+Graph FileReader::getAirportData(const string& filename, int lines) {
   Graph g(true, true);
 
   //Read in the airports as vertices of the graph
     fstream fin;
 
-    fin.open("airports.dat.txt", ios::in);
+    fin.open(filename, ios::in);
 
-    int airportsLines = 7698;
+    int airportsLines = lines;
     string airportLine;
 
     //The 14 entries in each row of airports.dat.txt
@@ -102,4 +103,9 @@ Graph FileReader::getAirportData() {
     }
 
   return g;
+}
+
+Graph FileReader::getAirportData() {
+  const string FILENAME = "airports.dat.txt";
+  return getAirportData(FILENAME, 7698);
 }

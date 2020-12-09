@@ -1,10 +1,10 @@
 # This is copied directly from the Final Project Github Demo. Edits will be needed.
 
 #Executable names
-EXENAME = final
+EXENAME = main
 TEST = test
 
-OBJS = graph.o readFromFile.o BFS.o astar.o main.o 
+OBJS = graph.o readFromFile.o BFS.o astar.o shortestpath.o main.o 
 
 CXX = clang++
 CXXFLAGS = $(CS225) -std=c++1y -stdlib=libc++ -c -g -O0 -Wall -Wextra -pedantic
@@ -47,8 +47,8 @@ BFS.o: BFS.cpp BFS.h graph.h
 graph.o : graph.cpp graph.h
 	$(CXX) $(CXXFLAGS) graph.cpp
 
-test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp
-	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp $(LDFLAGS) -o test
+test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp shortestpath.cpp astar.cpp
+	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp shortestpath.cpp astar.cpp $(LDFLAGS) -o test
 
 clean:
 	-rm -f *.o $(EXENAME) test

@@ -10,4 +10,4 @@ In the second week of the project, we succeeded in reading basic data from a CSV
 
 Week of 12/7/20
 
-In the third week of the project, we finished our implementation of A* search by refactoring the original Graph implementation and using latitude/longitude coordinates as a heuristic. We also implemented better command line functionality to our application, allowing the user to choose parameters for our BFS and A* functions. 
+In the third week of the project, we finished our implementation of Dijkstra's algorithm and A* search by refactoring the original Graph implementation and using latitude/longitude coordinates as a heuristic. We also implemented better command line functionality to our application, allowing the user to choose parameters for our BFS and A* functions. Finally, as a group, we imported CATCH testing library into our project and wrote test cases for each of our three algorithms.

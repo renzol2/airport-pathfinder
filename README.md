@@ -11,5 +11,6 @@ make
 ### Running
 ```java
 ./main bfs DIRECT_ROUTES
+./main dj SOURCE_ID DESTINATION_ID
 ./main astar SOURCE_ID DESTINATION_ID
 ```

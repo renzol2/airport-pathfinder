@@ -12,7 +12,7 @@ using std::vector;
  * Finds the shortest path from one vertex to another in a graph
  * using the A* search algorithm
  */
-vector<Vertex> getShortestPath(const Graph& g, const Vertex& src,
+vector<Vertex> getShortestPathAStar(const Graph& g, const Vertex& src,
                              const Vertex& dest);
 
 /**

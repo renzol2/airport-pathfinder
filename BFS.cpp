@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void BFS(Graph g, int directRoutes) {
+vector<Vertex> BFS(Graph g, int directRoutes) {
     for (Vertex v : g.getVertices()) {
         pair<Vertex, int> p;
         p.first = v;
@@ -17,15 +17,19 @@ void BFS(Graph g, int directRoutes) {
     for (Edge e : g.getEdges()) {
         g.setEdgeLabel(e.source, e.dest, "UNEXPLORED");
     }
-
+    
+    vector<Vertex> airports;
+    
     for (Vertex v : g.getVertices()) {
         if (visitedVertices[v] == 0) {
-            BFS(g, v, directRoutes);
+            airports = BFS(g, v, directRoutes, airports);
         }
     }
+
+    return airports;
 }
 
-void BFS(Graph g, Vertex v, int directRoutes) {
+vector<Vertex> BFS(Graph g, Vertex v, int directRoutes, vector<Vertex> & airports) {
     queue<Vertex> q;
 
     visitedVertices[v] = 1; //Setting vertex to visited.
@@ -38,7 +42,8 @@ void BFS(Graph g, Vertex v, int directRoutes) {
 
         //BFS traverses the graph and prints the airports that have direct routes to at least n other airports.
         if (g.getAdjacent(vert).size() >= (unsigned long)directRoutes) {
-            cout << vert.label << ": " << vert.name << '\n';
+            // cout << vert.label << ": " << vert.name << '\n';
+            airports.push_back(vert);
         }
 
         for (Vertex w : g.getAdjacent(vert)) {
@@ -52,4 +57,5 @@ void BFS(Graph g, Vertex v, int directRoutes) {
             }
         }
     }
+    return airports;
 }

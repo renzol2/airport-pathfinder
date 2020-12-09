@@ -9,7 +9,7 @@ using std::unordered_map;
 // Written using pseudocode from the following source:
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 
-vector<Vertex> getShortestPath(const Graph& graph, const Vertex& src,
+vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
                              const Vertex& dest) {
   // Keeps track of where a vertex's source
   unordered_map<Vertex, Vertex> cameFrom;
