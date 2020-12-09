@@ -91,7 +91,8 @@ Graph FileReader::getAirportData() {
         Vertex src = idVertexMap.at(sourceID);
         Vertex dest = idVertexMap.at(destinationID);
         if (g.edgeExists(src, dest)) {
-            g.setEdgeWeight(src, dest, g.getEdgeWeight(src, dest) + 1);
+            // 1 / ( routes + 1 )
+            g.setEdgeWeight(src, dest, 1 / ((1 / g.getEdgeWeight(src, dest)) + 1));
         } else {
             g.insertEdge(src, dest);
             g.setEdgeWeight(src, dest, 1);
