@@ -1,6 +1,9 @@
 # This is copied directly from the Final Project Github Demo. Edits will be needed.
 
-EXENAME = main
+#Executable names
+EXENAME = final
+TEST = test
+
 OBJS = graph.o readFromFile.o BFS.o astar.o main.o 
 
 CXX = clang++
@@ -32,17 +35,20 @@ output_msg: ; $(CLANG_VERSION_MSG)
 $(EXENAME): output_msg $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXENAME)
 
-readFromFile.o: readFromFile.cpp readFromFile.h
+readFromFile.o: readFromFile.cpp readFromFile.h graph.h
 	$(CXX) $(CXXFLAGS) readFromFile.cpp
 
 main.o: main.cpp readFromFile.h BFS.h
 	$(CXX) $(CXXFLAGS) main.cpp
 
-BFS.o: BFS.cpp BFS.h
+BFS.o: BFS.cpp BFS.h graph.h
 	$(CXX) $(CXXFLAGS) BFS.cpp
 
-test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp
-	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp $(LDFLAGS) -o test
+graph.o : graph.cpp graph.h
+	$(CXX) $(CXXFLAGS) graph.cpp
+
+test: output_msg catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp
+	$(LD) catch/catchmain.cpp tests/tests.cpp readFromFile.cpp BFS.cpp graph.cpp $(LDFLAGS) -o test
 
 clean:
 	-rm -f *.o $(EXENAME) test

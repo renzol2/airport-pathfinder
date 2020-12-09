@@ -37,7 +37,7 @@ void BFS(Graph g, Vertex v, int directRoutes) {
         q.pop();
 
         //BFS traverses the graph and prints the airports that have direct routes to at least n other airports.
-        if (g.getAdjacent(vert).size() >= directRoutes) {
+        if (g.getAdjacent(vert).size() >= (unsigned long)directRoutes) {
             cout << vert.label << ": " << vert.name << '\n';
         }
 
