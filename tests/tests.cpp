@@ -43,28 +43,47 @@ Graph getAirportTestingData() {
 TEST_CASE("Test Dijkstra's") {
   // Test Dijkstra's Algorithm
   SECTION("Simple graph") {
-
+    Graph h = createSimpleGraph();
+    vector<Vertex> f = getShortestPath(h, a, d);
+    vector<Vertex> shortestPath{a, b, d};
+    REQUIRE(f == shortestPath);
   }
 
   SECTION("Vertices with no path results in no shortest path") {
+    // Make a graph with two vertices that have no path
+    // Run Dijkstra's on the two vertices
+    // Check that the resulting vector is empty
+  }
 
+  SECTION("If a == b, path should be length 1") {
+    // Run Dijkstra's with source == destinatino
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-
+    // Make a graph with two shortest paths
   }
 
-  SECTION("Shortest path on airport subset works") {
-    
+  SECTION("Path between an airport and itself exists") {
   }
-  Graph h = createSimpleGraph();
-  vector<Vertex> f = getShortestPath(h, a, d);
-  vector<Vertex> shortestPath{a, b, d};
-  REQUIRE(f == shortestPath);
+
+  SECTION("Path between airports 1 and 2 exists") {
+  }
+
+  SECTION("Path between airports 1 and 5 exists") {
+  }
+
+  SECTION("Path between airports 4 and 12 does not exist") {
+  }
+
+  SECTION("Path of airport a and b is same as path between b and a") {
+
+  }
+  
 }
 
 // Test A* Algorithm
 TEST_CASE("Test A*") {
+  // Test A* Algorithm
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
@@ -73,15 +92,35 @@ TEST_CASE("Test A*") {
   }
 
   SECTION("Vertices with no path results in no shortest path") {
+    // Make a graph with two vertices that have no path
+    // Run A* on the two vertices
+    // Check that the resulting vector is empty
+  }
 
+  SECTION("If a == b, path should be length 1") {
+    // Run A* with source == destinatino
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-
+    // Make a graph with two shortest paths
   }
 
-  SECTION("Shortest path on airport subset works") {
+  SECTION("Path between an airport and itself exists") {
   }
+
+  SECTION("Path between airports 1 and 2 exists") {
+  }
+
+  SECTION("Path between airports 1 and 5 exists") {
+  }
+
+  SECTION("Path between airports 4 and 12 does not exist") {
+  }
+
+  SECTION("Path of airport a and b is same as path between b and a") {
+
+  }
+  
 }
 
 TEST_CASE("Test BFS") {
