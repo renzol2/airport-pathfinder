@@ -3,14 +3,23 @@
 #include "../graph.h"
 #include "../readFromFile.h"
 #include "../shortestpath.h"
+#include "../BFS.h"
 
 using namespace std;
 
-Vertex a = Vertex("a");
-Vertex b = Vertex("b");
-Vertex c = Vertex("c");
-Vertex d = Vertex("d");
+const Vertex a = Vertex("a");
+const Vertex b = Vertex("b");
+const Vertex c = Vertex("c");
+const Vertex d = Vertex("d");
 
+/**
+ * Creates graph as follows:
+ * 
+ * A --> B
+ * |     |
+ * v     v
+ * C --> D
+ */
 Graph createSimpleGraph() {
   Graph h = Graph(true, true);
   h.insertVertex(a);
@@ -45,84 +54,96 @@ TEST_CASE("Test Dijkstra's") {
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPath(h, a, d);
-    vector<Vertex> shortestPath{a, b, d};
-    REQUIRE(f == shortestPath);
+    vector<Vertex> shortestPath1{a, b, d};
+    vector<Vertex> shortestPath2{a, c, d};
+
+    REQUIRE((f == shortestPath1 || f == shortestPath2));
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-    // Make a graph with two vertices that have no path
-    // Run Dijkstra's on the two vertices
-    // Check that the resulting vector is empty
-  }
 
-  SECTION("If a == b, path should be length 1") {
-    // Run Dijkstra's with source == destinatino
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-    // Make a graph with two shortest paths
-  }
-
-  SECTION("Path between an airport and itself exists") {
-  }
-
-  SECTION("Path between airports 1 and 2 exists") {
-  }
-
-  SECTION("Path between airports 1 and 5 exists") {
-  }
-
-  SECTION("Path between airports 4 and 12 does not exist") {
-  }
-
-  SECTION("Path of airport a and b is same as path between b and a") {
 
   }
-  
+
+  SECTION("Shortest path on airport subset works") {
+    
+  }
+
 }
 
 // Test A* Algorithm
 TEST_CASE("Test A*") {
-  // Test A* Algorithm
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
-    vector<Vertex> shortestPath{a, b, d};
-    REQUIRE(f == shortestPath);
+    vector<Vertex> shortestPath1{a, b, d};
+    vector<Vertex> shortestPath2{a, c, d};
+
+    REQUIRE((f == shortestPath1 || f == shortestPath2));
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-    // Make a graph with two vertices that have no path
-    // Run A* on the two vertices
-    // Check that the resulting vector is empty
-  }
 
-  SECTION("If a == b, path should be length 1") {
-    // Run A* with source == destinatino
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-    // Make a graph with two shortest paths
-  }
-
-  SECTION("Path between an airport and itself exists") {
-  }
-
-  SECTION("Path between airports 1 and 2 exists") {
-  }
-
-  SECTION("Path between airports 1 and 5 exists") {
-  }
-
-  SECTION("Path between airports 4 and 12 does not exist") {
-  }
-
-  SECTION("Path of airport a and b is same as path between b and a") {
 
   }
-  
+
+  SECTION("Shortest path on airport subset works") {
+  }
 }
 
 TEST_CASE("Test BFS") {
-  Graph h = createSimpleGraph();
+  Graph g = Graph(true, true);
+  
+  Vertex z = Vertex("z");
+  Vertex y = Vertex("y");
+  Vertex x = Vertex("x");
+  Vertex w = Vertex("w");
+  Vertex v = Vertex("v");
+  Vertex u = Vertex("u");
+  Vertex t = Vertex("t");
+  Vertex s = Vertex("s");
+  Vertex r = Vertex("r");
+  Vertex q = Vertex("q");
+  g.insertVertex(z);
+  g.insertVertex(y);
+  g.insertVertex(x);
+  g.insertVertex(w);
+  g.insertVertex(v);
+  g.insertVertex(u);
+  g.insertVertex(t);
+  g.insertVertex(s);
+  g.insertVertex(r);
+  g.insertVertex(q);
+
+  g.insertEdge(z, y);
+  g.insertEdge(z, w);
+  g.insertEdge(z, x);
+  g.insertEdge(y, r);
+  g.insertEdge(y, q);
+  g.insertEdge(y, v);
+  g.insertEdge(v, u);
+  g.insertEdge(x, t);
+  g.insertEdge(w, s);
+  //
+  g.insertEdge(r, y);
+  g.insertEdge(q, y);
+  g.insertEdge(u, v);
+  g.insertEdge(s, w);
+  g.insertEdge(t, x);
+
+  vector<Vertex> output = BFS(g, 1);
+  vector<Vertex> result{z, w, x, y, s, t, v, q, r, u};
+  
+  // for (auto & v : output) {
+  //   cout << v.label << endl;
+  // }
+
+  REQUIRE(output.size() == 10);
+  REQUIRE(output == result);
 }
