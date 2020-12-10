@@ -7,11 +7,19 @@
 
 using namespace std;
 
-Vertex a = Vertex("a");
-Vertex b = Vertex("b");
-Vertex c = Vertex("c");
-Vertex d = Vertex("d");
+const Vertex a = Vertex("a");
+const Vertex b = Vertex("b");
+const Vertex c = Vertex("c");
+const Vertex d = Vertex("d");
 
+/**
+ * Creates graph as follows:
+ * 
+ * A --> B
+ * |     |
+ * v     v
+ * C --> D
+ */
 Graph createSimpleGraph() {
   Graph h = Graph(true, true);
   h.insertVertex(a);
@@ -44,7 +52,12 @@ Graph getAirportTestingData() {
 TEST_CASE("Test Dijkstra's") {
   // Test Dijkstra's Algorithm
   SECTION("Simple graph") {
+    Graph h = createSimpleGraph();
+    vector<Vertex> f = getShortestPath(h, a, d);
+    vector<Vertex> shortestPath1{a, b, d};
+    vector<Vertex> shortestPath2{a, c, d};
 
+    REQUIRE((f == shortestPath1 || f == shortestPath2));
   }
 
   SECTION("Vertices with no path results in no shortest path") {
@@ -58,10 +71,7 @@ TEST_CASE("Test Dijkstra's") {
   SECTION("Shortest path on airport subset works") {
     
   }
-  Graph h = createSimpleGraph();
-  vector<Vertex> f = getShortestPath(h, a, d);
-  vector<Vertex> shortestPath{a, b, d};
-  REQUIRE(f == shortestPath);
+
 }
 
 // Test A* Algorithm
@@ -69,13 +79,10 @@ TEST_CASE("Test A*") {
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
-    vector<Vertex> shortestPath{a, b, d};
+    vector<Vertex> shortestPath1{a, b, d};
+    vector<Vertex> shortestPath2{a, c, d};
 
-    for (auto & v : f) {
-      cout << v.name << endl;
-    }
-
-    REQUIRE(f == shortestPath);
+    REQUIRE((f == shortestPath1 || f == shortestPath2));
   }
 
   SECTION("Vertices with no path results in no shortest path") {
