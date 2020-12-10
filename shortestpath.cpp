@@ -1,18 +1,21 @@
+// Written using the following sources:
+// https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+// https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
+
 #include "shortestpath.h"
 
 #include <map>
 #include <queue>
 
-// TODO: fix graph stuff to return double....
-struct orderByDist {
-    orderByDist(std::map<Vertex, double> input) {
-        this->distance = input;
-    } 
-	bool operator()(Vertex const& a, Vertex const& b) {
-		return distance[a] > distance[b];
-	}
-    std::map<Vertex, double> distance;
-};
+// struct orderByDist {
+//     orderByDist(std::map<Vertex, double> input) {
+//         this->distance = input;
+//     } 
+// 	bool operator()(Vertex const& a, Vertex const& b) {
+// 		return distance[a] > distance[b];
+// 	}
+//     std::map<Vertex, double> distance;
+// };
 
 vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex & dest) {
 
@@ -26,19 +29,23 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
 	}
 	distance[src] = 0;
 
-    std::priority_queue<Vertex, vector<Vertex>, orderByDist> q((orderByDist(distance)));
+    std::priority_queue<std::pair<double, Vertex>, vector<std::pair<double, Vertex>>, std::greater<std::pair<double, Vertex>>> q;
 
-    for (Vertex v : g.getVertices()) {
-        q.push(v);
-    }
+    // for (Vertex v : g.getVertices()) {
+    //     q.push(v);
+    // }
+
+    q.push(std::make_pair(0, src));
 
 	while (q.size()) {
-		Vertex u = q.top();
+		Vertex u = q.top().second;
 		q.pop();
-        // if (u == dest) { break; }
+        
+        if (u == dest) { break; }
 		for (Vertex v : g.getAdjacent(u)) {
-            if (distance[u] + (double)g.getEdgeWeight(u, v) < distance[v]) {
-                distance[v] = distance[u] + (double)g.getEdgeWeight(u, v);
+            if (distance[u] + g.getEdgeWeight(u, v) < distance[v]) {
+                distance[v] = distance[u] + g.getEdgeWeight(u, v);
+                q.push(std::make_pair(distance[v], v));
                 predecessor[v] = u;
             }
         }
