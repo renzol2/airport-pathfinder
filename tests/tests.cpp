@@ -4,6 +4,8 @@
 #include "../readFromFile.h"
 #include "../shortestpath.h"
 
+#include <iostream>
+
 using namespace std;
 
 Vertex a = Vertex("a");
@@ -28,6 +30,32 @@ Graph createSimpleGraph() {
   return h;
 }
 
+Graph createUnconnectedGraph() {
+  Graph h = Graph(true, true);
+  h.insertVertex(a);
+  h.insertVertex(b);
+  h.insertVertex(c);
+  h.insertVertex(d);
+  return h;
+}
+
+Graph createSquareGraph() {
+  Graph h = Graph(true, true);
+  h.insertVertex(a);
+  h.insertVertex(b);
+  h.insertVertex(c);
+  h.insertVertex(d);
+  h.insertEdge(a, c);
+  h.setEdgeWeight(a, c, 1);
+  h.insertEdge(a, b);
+  h.setEdgeWeight(a, b, 1);
+  h.insertEdge(b, d);
+  h.setEdgeWeight(b, d, 1);
+  h.insertEdge(c, d);
+  h.setEdgeWeight(c, d, 1);
+  return h;
+}
+
 Graph getAirportTestingData() {
   int NUMBER_LINES = 100;
   FileReader fr;
@@ -45,7 +73,7 @@ TEST_CASE("Test Dijkstra's") {
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPath(h, a, d);
-    vector<Vertex> shortestPath{a, b, d};
+    vector<Vertex> shortestPath{a, c, d};
     REQUIRE(f == shortestPath);
   }
 
@@ -53,15 +81,29 @@ TEST_CASE("Test Dijkstra's") {
     // Make a graph with two vertices that have no path
     // Run Dijkstra's on the two vertices
     // Check that the resulting vector is empty
+    Graph g = createUnconnectedGraph();
+    vector<Vertex> f = getShortestPath(g, a, d);
+    vector<Vertex> shortestPath{};
+    REQUIRE(f == shortestPath);
   }
 
   SECTION("If a == b, path should be length 1") {
-    // Run Dijkstra's with source == destinatino
+    // Run Dijkstra's with source == destination
+    Graph j = Graph(true, true);
+    j.insertVertex(a);
+    vector<Vertex> f = getShortestPath(j, a, a);
+    vector<Vertex> shortestPath{a};
+    REQUIRE(f.size() == 1);
+    REQUIRE(f == shortestPath);
   }
 
-  SECTION("Multiple shortest paths returns the first shortest path") {
-    // Make a graph with two shortest paths
-  }
+  // SECTION("Multiple shortest paths returns the first shortest path") {
+  //   // Make a graph with two shortest paths
+  //   Graph k = createSquareGraph();
+  //   vector<Vertex> f = getShortestPath(k, a, d);
+  //   vector<Vertex> shortestPath{a, c, d};
+  //   REQUIRE(f == shortestPath);
+  // }
 
   SECTION("Path between an airport and itself exists") {
   }
@@ -87,7 +129,7 @@ TEST_CASE("Test A*") {
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
-    vector<Vertex> shortestPath{a, b, d};
+    vector<Vertex> shortestPath{a, c, d};
     REQUIRE(f == shortestPath);
   }
 
