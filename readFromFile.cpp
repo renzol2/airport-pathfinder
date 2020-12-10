@@ -93,7 +93,7 @@ Graph FileReader::getAirportData(const string& filename, int lines) {
         Vertex dest = idVertexMap.at(destinationID);
         if (g.edgeExists(src, dest)) {
             // 1 / ( routes + 1 )
-            g.setEdgeWeight(src, dest, 1 / ((1 / g.getEdgeWeight(src, dest)) + 1));
+            g.setEdgeWeight(src, dest, 1.0 / ((1.0 / (double)g.getEdgeWeight(src, dest)) + 1.0));
         } else {
             g.insertEdge(src, dest);
             g.setEdgeWeight(src, dest, 1);

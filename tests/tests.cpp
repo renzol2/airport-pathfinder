@@ -165,7 +165,7 @@ TEST_CASE("Test Dijkstra's") {
   }
 
   SECTION("Shortest path 1 -> 30 on airport data exists") {
-    vector<int> expectedPathIds = {1, 5, 3320, 2188, 11051, 1218, 1229, 1824, 1836, 156, 30};
+    vector<int> expectedPathIds = {1, 5, 3361, 3728, 156, 30};
 
     Vertex airport1 = getAirportVertex(airportData, "1");
     Vertex airport30 = getAirportVertex(airportData, "30");
@@ -249,11 +249,8 @@ TEST_CASE("Test A*") {
   }
 
 
-  // FIXME: different from Dijkstra's... need to check
   SECTION("Shortest path 1 -> 30 on airport data exists") {
-    vector<int> expectedPathIds = {1, 5, 2397, 2372, 3992, 421, 609, 665, 664, 
-                                   666, 532, 541, 534, 3878, 3564, 3646, 3849, 
-                                   3488, 3458, 3720, 178, 119, 30};
+    vector<int> expectedPathIds = {1, 5, 3361, 3728, 156, 30};
 
     Vertex airport1 = getAirportVertex(airportData, "1");
     Vertex airport30 = getAirportVertex(airportData, "30");

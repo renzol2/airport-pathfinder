@@ -57,7 +57,10 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
 }
 
 double calculateHeuristic(const Vertex& src, const Vertex& dest) {
-  return getOrthodromicDistance(src, dest);
+  const double EARTH_RADIUS_KM = 6371.0;
+  double distance = getOrthodromicDistance(src, dest);
+  double h = distance / (2 * EARTH_RADIUS_KM);
+  return h;
 }
 
 Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
@@ -99,5 +102,6 @@ double getOrthodromicDistance(const Vertex& source, const Vertex& destination)  
   u = sin((lat2r - lat1r)/2);
   v = sin((lon2r - lon1r)/2);
   const double EARTH_RADIUS_KM = 6371.0;
-  return 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
+  double distance = 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
+  return distance;
 }

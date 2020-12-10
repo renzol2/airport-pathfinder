@@ -58,9 +58,11 @@ void runDijkstras(Graph& g, const Vertex& src, const Vertex& dest) {
   cout << "Done!\nShortest path from vertices " << src.label << " to " << dest.label
             << " using Dijkstra's algorithm:\n";
 
-  // Print id of each vertex in path
+  Vertex prev = src;
   for (const auto& v : path) {
+    cout << "weight: " << g.getEdgeWeight(prev, v) << endl;
     cout << v.label << ": " << v.name << endl;
+    prev = v;
   }
 }
 
@@ -92,8 +94,11 @@ void runAStar(Graph& g, const Vertex& src, const Vertex& dest) {
             << " using A* search:\n";
 
   // Print id of each vertex in path
+  Vertex prev = src;
   for (const auto& v : path) {
+    cout << "weight: " << g.getEdgeWeight(prev, v) << endl;
     cout << v.label << ": " << v.name << endl;
+    prev = v;
   }
 }
 
