@@ -1,18 +1,21 @@
+// Written using the following sources:
+// https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+// https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
+
 #include "shortestpath.h"
 
 #include <map>
 #include <queue>
 
-// TODO: fix graph stuff to return double....
-struct orderByDist {
-    orderByDist(std::map<Vertex, double> input) {
-        this->distance = input;
-    } 
-	bool operator()(Vertex const& a, Vertex const& b) {
-		return distance[a] > distance[b];
-	}
-    std::map<Vertex, double> distance;
-};
+// struct orderByDist {
+//     orderByDist(std::map<Vertex, double> input) {
+//         this->distance = input;
+//     } 
+// 	bool operator()(Vertex const& a, Vertex const& b) {
+// 		return distance[a] > distance[b];
+// 	}
+//     std::map<Vertex, double> distance;
+// };
 
 vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex & dest) {
 
@@ -22,42 +25,31 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
 	std::map<Vertex, Vertex> predecessor;
 
 	for (Vertex v : g.getVertices()) {
-		// distance[v] = std::numeric_limits<double>::infinity();	// maybe this doesnt work
-        distance[v] = 1000;
+		distance[v] = std::numeric_limits<double>::infinity();	// maybe this doesnt work
 	}
 	distance[src] = 0;
-    // distance["b"] = 4; // test
 
-    std::priority_queue<Vertex, vector<Vertex>, orderByDist> q((orderByDist(distance)));
+    std::priority_queue<std::pair<double, Vertex>, vector<std::pair<double, Vertex>>, std::greater<std::pair<double, Vertex>>> q;
 
-    for (Vertex v : g.getVertices()) {
-        q.push(v);
-    }
-    
-    // distance[src] = 3000;
-
-    // TEST
-    // while (q.size()) {
-    //     std::cout << q.top() << std::endl;
-    //     q.pop();
+    // for (Vertex v : g.getVertices()) {
+    //     q.push(v);
     // }
 
-	while (q.size()) { // Note: keep an eye on heapify for minheap...
-		Vertex u = q.top();
+    q.push(std::make_pair(0, src));
+
+	while (q.size()) {
+		Vertex u = q.top().second;
 		q.pop();
-        // std::cout << "top: " << u << std::endl;
+        
+        if (u == dest) { break; }
 		for (Vertex v : g.getAdjacent(u)) {
-            // std::cout << "vertex: " << v << " edge weight: " << g.getEdgeWeight(u, v) << " sum of dist: " << distance[u] + (double)g.getEdgeWeight(u, v) << std::endl;
-            if (distance[u] + (double)g.getEdgeWeight(u, v) < distance[v]) {
-                distance[v] = distance[u] + (double)g.getEdgeWeight(u, v);
+            if (distance[u] + g.getEdgeWeight(u, v) < distance[v]) {
+                distance[v] = distance[u] + g.getEdgeWeight(u, v);
+                q.push(std::make_pair(distance[v], v));
                 predecessor[v] = u;
             }
         }
-	} // can optionally kill the loop as soon as u = destination if (u == dest) { break; }
-
-    // for (auto j : distance) {
-    //     std::cout << "fisrt: " << j.first << " second: " << j.second << std::endl;
-    // }
+	} 
 
     Vertex temp = dest;
     while (predecessor.find(temp) != predecessor.end()) {
@@ -65,12 +57,13 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
         temp = predecessor[temp];
     }
 
+    // If no path is found (given the source is NOT the destination), return empty path
+    if (path.empty() && (src != dest)) {
+        return path;
+    }
+
     path.push_back(src);
     std::reverse(path.begin(), path.end());
 
     return path;
 }
-
-// void buildHeap(const std::vector<Vertex>& vertices,
-// 			   std::priority_queue<Vertex, vector<Vertex>, std::greater<Vertex>>& q) {
-// }

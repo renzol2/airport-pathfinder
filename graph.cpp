@@ -283,7 +283,7 @@ Edge Graph::setEdgeWeight(Vertex source, Vertex destination, double weight)
     if (assertEdgeExists(source, destination, __func__) == false)
         return InvalidEdge;
     Edge e = adjacency_list[source][destination];
-    //std::cout << "setting weight: " << weight << std::endl;
+    // std::cout << "setting weight: " << weight << std::endl;
     Edge new_edge(source, destination, weight, e.getLabel());
     adjacency_list[source][destination] = new_edge;
 
