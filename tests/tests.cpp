@@ -3,6 +3,7 @@
 #include "../graph.h"
 #include "../readFromFile.h"
 #include "../shortestpath.h"
+#include "../BFS.h"
 
 using namespace std;
 
@@ -69,6 +70,11 @@ TEST_CASE("Test A*") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
     vector<Vertex> shortestPath{a, b, d};
+
+    for (auto & v : f) {
+      cout << v.name << endl;
+    }
+
     REQUIRE(f == shortestPath);
   }
 
@@ -85,5 +91,52 @@ TEST_CASE("Test A*") {
 }
 
 TEST_CASE("Test BFS") {
-  Graph h = createSimpleGraph();
+  Graph g = Graph(true, true);
+  
+  Vertex z = Vertex("z");
+  Vertex y = Vertex("y");
+  Vertex x = Vertex("x");
+  Vertex w = Vertex("w");
+  Vertex v = Vertex("v");
+  Vertex u = Vertex("u");
+  Vertex t = Vertex("t");
+  Vertex s = Vertex("s");
+  Vertex r = Vertex("r");
+  Vertex q = Vertex("q");
+  g.insertVertex(z);
+  g.insertVertex(y);
+  g.insertVertex(x);
+  g.insertVertex(w);
+  g.insertVertex(v);
+  g.insertVertex(u);
+  g.insertVertex(t);
+  g.insertVertex(s);
+  g.insertVertex(r);
+  g.insertVertex(q);
+
+  g.insertEdge(z, y);
+  g.insertEdge(z, w);
+  g.insertEdge(z, x);
+  g.insertEdge(y, r);
+  g.insertEdge(y, q);
+  g.insertEdge(y, v);
+  g.insertEdge(v, u);
+  g.insertEdge(x, t);
+  g.insertEdge(w, s);
+  //
+  g.insertEdge(r, y);
+  g.insertEdge(q, y);
+  g.insertEdge(u, v);
+  g.insertEdge(s, w);
+  g.insertEdge(t, x);
+
+  vector<Vertex> output = BFS(g, 1);
+  vector<Vertex> result{z, w, x, y, s, t, v, q, r, u};
+  
+  // for (auto & v : output) {
+  //   cout << v.label << endl;
+  // }
+
+  REQUIRE(output.size() == 10);
+  REQUIRE(output == result);
 }
