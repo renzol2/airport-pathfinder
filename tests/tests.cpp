@@ -38,9 +38,31 @@ Graph createSimpleGraph() {
 }
 
 Graph getAirportTestingData() {
-  int NUMBER_LINES = 100;
   FileReader fr;
-  return fr.getAirportData("100airports.dat.txt", NUMBER_LINES);
+  return fr.getAirportData();
+}
+
+Vertex getAirportVertex(const Graph& airportData, const string& airportId) {
+  for (const auto& v : airportData.getVertices()) {
+    if (v.label == airportId) return v;
+  }
+  return Vertex();
+}
+
+vector<Vertex> getPath(const Graph& airportData, const vector<int>& airportIds) {
+  vector<Vertex> vertices;
+  for (int id : airportIds) {
+    string airportId = std::to_string(id);
+    Vertex v = getAirportVertex(airportData, airportId);
+
+    // Return empty vector if path doesn't exist
+    if (v == Vertex()) {
+      return vector<Vertex>();
+    }
+
+    vertices.push_back(v);
+  }
+  return vertices;
 }
 
 /**
@@ -49,8 +71,13 @@ Graph getAirportTestingData() {
  * - multiple shortest paths exist between a and b
  */
 
+// Test Dijkstra's Algorithm
 TEST_CASE("Test Dijkstra's") {
-  // Test Dijkstra's Algorithm
+  // Load in airport data
+  Graph airportData = getAirportTestingData();
+  vector<Vertex> airports = airportData.getVertices();
+  REQUIRE(airports.size() == 7698);
+
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPath(h, a, d);
@@ -61,21 +88,72 @@ TEST_CASE("Test Dijkstra's") {
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-
+    // TODO: make this test
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-
+    // TODO: make this test
   }
 
-  SECTION("Shortest path on airport subset works") {
-    
+  SECTION("Shortest path 50 -> 50 on airport data exists") {
+    Vertex airport50 = getAirportVertex(airportData, "50");
+
+    // Use A* to find shortest path between 50 and itself
+    vector<Vertex> path = getShortestPath(airportData, airport50, airport50);
+
+    REQUIRE(!path.empty());
+    REQUIRE(path == vector<Vertex>{ airport50 });
+  }
+
+  SECTION("Shortest path 1 -> 5 on airport data exists") {
+    Vertex airport1 = getAirportVertex(airportData, "1");
+    Vertex airport5 = getAirportVertex(airportData, "5");
+
+    // Use A* to find shortest path between 1 and 5
+    vector<Vertex> path = getShortestPath(airportData, airport1, airport5);
+
+    REQUIRE(!path.empty());
+    REQUIRE(path == vector<Vertex>{ airport1, airport5 });
+  }
+
+  // FIXME: doesn't work
+  SECTION("Shortest path 10 -> 20 on airport data does not exist") {
+    Vertex airport10 = getAirportVertex(airportData, "10");
+    Vertex airport20 = getAirportVertex(airportData, "20");
+
+    // Use A* to find shortest path between 10 and 20
+    vector<Vertex> path = getShortestPath(airportData, airport10, airport20);
+
+    REQUIRE(path.empty());
+  }
+
+  // FIXME: doesn't work
+  SECTION("Shortest path 1 -> 30 on airport data exists") {
+    vector<int> expectedPathIds = {1, 5, 2397, 2372, 3992, 421, 609, 665, 664, 
+                                   666, 532, 541, 534, 3878, 3564, 3646, 3849, 
+                                   3488, 3458, 3720, 178, 119, 30};
+
+    Vertex airport1 = getAirportVertex(airportData, "1");
+    Vertex airport30 = getAirportVertex(airportData, "30");
+
+    // Use A* to find shortest path between 1 and 30
+    vector<Vertex> path = getShortestPath(airportData, airport1, airport30);
+
+    REQUIRE(!path.empty());
+
+    vector<Vertex> expectedPath = getPath(airportData, expectedPathIds);
+    REQUIRE(path == expectedPath);
   }
 
 }
 
 // Test A* Algorithm
 TEST_CASE("Test A*") {
+  // Load in airport data
+  Graph airportData = getAirportTestingData();
+  vector<Vertex> airports = airportData.getVertices();
+  REQUIRE(airports.size() == 7698);
+
   SECTION("Simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
@@ -86,14 +164,59 @@ TEST_CASE("Test A*") {
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-
+    // TODO: make this test
   }
 
   SECTION("Multiple shortest paths returns the first shortest path") {
-
+    // TODO: make this test
   }
 
-  SECTION("Shortest path on airport subset works") {
+  SECTION("Shortest path 50 -> 50 on airport data exists") {
+    Vertex airport50 = getAirportVertex(airportData, "50");
+
+    // Use A* to find shortest path between 50 and itself
+    vector<Vertex> path = getShortestPathAStar(airportData, airport50, airport50);
+
+    REQUIRE(!path.empty());
+    REQUIRE(path == vector<Vertex>{ airport50 });
+  }
+
+  SECTION("Shortest path 1 -> 5 on airport data exists") {
+    Vertex airport1 = getAirportVertex(airportData, "1");
+    Vertex airport5 = getAirportVertex(airportData, "5");
+
+    // Use A* to find shortest path between 1 and 5
+    vector<Vertex> path = getShortestPathAStar(airportData, airport1, airport5);
+
+    REQUIRE(!path.empty());
+    REQUIRE(path == vector<Vertex>{ airport1, airport5 });
+  }
+
+  SECTION("Shortest path 10 -> 20 on airport data does not exist") {
+    Vertex airport10 = getAirportVertex(airportData, "10");
+    Vertex airport20 = getAirportVertex(airportData, "20");
+
+    // Use A* to find shortest path between 10 and 20
+    vector<Vertex> path = getShortestPathAStar(airportData, airport10, airport20);
+
+    REQUIRE(path.empty());
+  }
+
+  SECTION("Shortest path 1 -> 30 on airport data exists") {
+    vector<int> expectedPathIds = {1, 5, 2397, 2372, 3992, 421, 609, 665, 664, 
+                                   666, 532, 541, 534, 3878, 3564, 3646, 3849, 
+                                   3488, 3458, 3720, 178, 119, 30};
+
+    Vertex airport1 = getAirportVertex(airportData, "1");
+    Vertex airport30 = getAirportVertex(airportData, "30");
+
+    // Use A* to find shortest path between 1 and 30
+    vector<Vertex> path = getShortestPathAStar(airportData, airport1, airport30);
+
+    REQUIRE(!path.empty());
+
+    vector<Vertex> expectedPath = getPath(airportData, expectedPathIds);
+    REQUIRE(path == expectedPath);
   }
 }
 
