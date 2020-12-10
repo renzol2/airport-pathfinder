@@ -13,6 +13,8 @@ void runBFS(Graph& g, int directRoutes) {
   // least 100 direct routes to another airport.
   cout << "Printing airports with at least " << directRoutes 
        << " direct routes to another airport...\n\n";
+
+  cout << "Note that this full graph traversal may take up to 3 minutes.\n\n" << endl;
   
   auto airports = BFS(g, directRoutes);
 
