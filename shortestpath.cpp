@@ -16,12 +16,16 @@ struct orderByDist {
 
 vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex & dest) {
 
-    std::vector<Vertex> path;
+  std::vector<Vertex> path;
+
+  if (src == dest) {
+    return { src };
+  }
 
 	std::map<Vertex, double> distance;
 	std::map<Vertex, Vertex> predecessor;
 
-	for (Vertex v : g.getVertices()) {
+	for (const Vertex& v : g.getVertices()) {
 		distance[v] = std::numeric_limits<double>::infinity();	// maybe this doesnt work
 	}
 	distance[src] = 0;
@@ -36,7 +40,7 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
 		Vertex u = q.top();
 		q.pop();
         // if (u == dest) { break; }
-		for (Vertex v : g.getAdjacent(u)) {
+		for (const Vertex& v : g.getAdjacent(u)) {
             if (distance[u] + (double)g.getEdgeWeight(u, v) < distance[v]) {
                 distance[v] = distance[u] + (double)g.getEdgeWeight(u, v);
                 predecessor[v] = u;
@@ -51,7 +55,7 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
     }
 
     // If no path is found (given the source is NOT the destination), return empty path
-    if (path.empty() && (src != dest)) {
+    if (path.empty()) {
         return path;
     }
 
