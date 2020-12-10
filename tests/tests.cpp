@@ -88,11 +88,23 @@ TEST_CASE("Test Dijkstra's") {
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-    // TODO: make this test
+    // Make a graph with two vertices that have no path
+    // Run Dijkstra's on the two vertices
+    // Check that the resulting vector is empty
+    Graph g = createUnconnectedGraph();
+    vector<Vertex> f = getShortestPath(g, a, d);
+    vector<Vertex> shortestPath{};
+    REQUIRE(f == shortestPath);
   }
 
-  SECTION("Multiple shortest paths returns the first shortest path") {
-    // TODO: make this test
+  SECTION("If a == b, path should be length 1") {
+    // Run Dijkstra's with source == destination
+    Graph j = Graph(true, true);
+    j.insertVertex(a);
+    vector<Vertex> f = getShortestPath(j, a, a);
+    vector<Vertex> shortestPath{a};
+    REQUIRE(f.size() == 1);
+    REQUIRE(f == shortestPath);
   }
 
   SECTION("Shortest path 50 -> 50 on airport data exists") {
@@ -164,11 +176,23 @@ TEST_CASE("Test A*") {
   }
 
   SECTION("Vertices with no path results in no shortest path") {
-    // TODO: make this test
+    // Make a graph with two vertices that have no path
+    // Run Dijkstra's on the two vertices
+    // Check that the resulting vector is empty
+    Graph g = createUnconnectedGraph();
+    vector<Vertex> f = getShortestPathAStar(g, a, d);
+    vector<Vertex> shortestPath{};
+    REQUIRE(f == shortestPath);
   }
 
-  SECTION("Multiple shortest paths returns the first shortest path") {
-    // TODO: make this test
+  SECTION("If a == b, path should be length 1") {
+    // Run Dijkstra's with source == destination
+    Graph j = Graph(true, true);
+    j.insertVertex(a);
+    vector<Vertex> f = getShortestPathAStar(j, a, a);
+    vector<Vertex> shortestPath{a};
+    REQUIRE(f.size() == 1);
+    REQUIRE(f == shortestPath);
   }
 
   SECTION("Shortest path 50 -> 50 on airport data exists") {
@@ -269,4 +293,30 @@ TEST_CASE("Test BFS") {
 
   REQUIRE(output.size() == 10);
   REQUIRE(output == result);
+}
+
+Graph createUnconnectedGraph() {
+  Graph h = Graph(true, true);
+  h.insertVertex(a);
+  h.insertVertex(b);
+  h.insertVertex(c);
+  h.insertVertex(d);
+  return h;
+}
+
+Graph createSquareGraph() {
+  Graph h = Graph(true, true);
+  h.insertVertex(a);
+  h.insertVertex(b);
+  h.insertVertex(c);
+  h.insertVertex(d);
+  h.insertEdge(a, c);
+  h.setEdgeWeight(a, c, 1);
+  h.insertEdge(a, b);
+  h.setEdgeWeight(a, b, 1);
+  h.insertEdge(b, d);
+  h.setEdgeWeight(b, d, 1);
+  h.insertEdge(c, d);
+  h.setEdgeWeight(c, d, 1);
+  return h;
 }
