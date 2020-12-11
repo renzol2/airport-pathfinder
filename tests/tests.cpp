@@ -13,12 +13,18 @@ const Vertex c = Vertex("c");
 const Vertex d = Vertex("d");
 
 /**
+ * Testing helper methods
+ */
+
+/**
  * Creates graph as follows:
  * 
  * A --> B
  * |     |
  * v     v
  * C --> D
+ * 
+ * Each edge has a different weight
  */
 Graph createSimpleGraph() {
   Graph h = Graph(true, true);
@@ -37,6 +43,12 @@ Graph createSimpleGraph() {
   return h;
 }
 
+/**
+ * Creates graph as follows:
+ * 
+ * A B C D
+ * 
+ */
 Graph createUnconnectedGraph() {
   Graph h = Graph(true, true);
   h.insertVertex(a);
@@ -46,6 +58,16 @@ Graph createUnconnectedGraph() {
   return h;
 }
 
+/**
+ * Creates graph as follows:
+ * 
+ * A --> B
+ * |     |
+ * v     v
+ * C --> D
+ * 
+ * Each edge has the same weight (1)
+ */
 Graph createSquareGraph() {
   Graph h = Graph(true, true);
   h.insertVertex(a);
@@ -63,11 +85,17 @@ Graph createSquareGraph() {
   return h;
 }
 
+/**
+ * Parses airport data into graph for testing
+ */
 Graph getAirportTestingData() {
   FileReader fr;
   return fr.getAirportData();
 }
 
+/**
+ * Finds an airport vertex based on its id
+ */
 Vertex getAirportVertex(const Graph& airportData, const string& airportId) {
   for (const auto& v : airportData.getVertices()) {
     if (v.label == airportId) return v;
@@ -75,6 +103,10 @@ Vertex getAirportVertex(const Graph& airportData, const string& airportId) {
   return Vertex();
 }
 
+/**
+ * Converts a vector of airport IDs as integers into a vector of Vertices
+ * from the given airport data
+ */
 vector<Vertex> getPath(const Graph& airportData, const vector<int>& airportIds) {
   vector<Vertex> vertices;
   for (int id : airportIds) {
@@ -92,9 +124,7 @@ vector<Vertex> getPath(const Graph& airportData, const vector<int>& airportIds) 
 }
 
 /**
- * Test cases for shortest path between vertices a and b
- * - no path exists between a and b
- * - multiple shortest paths exist between a and b
+ * Test cases
  */
 
 // Test Dijkstra's Algorithm
@@ -104,7 +134,7 @@ TEST_CASE("Test Dijkstra's") {
   vector<Vertex> airports = airportData.getVertices();
   REQUIRE(airports.size() == 7698);
 
-  SECTION("Simple graph") {
+  SECTION("Shortest path works on simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPath(h, a, d);
     vector<Vertex> shortestPath1{a, b, d};
@@ -165,7 +195,8 @@ TEST_CASE("Test Dijkstra's") {
   }
 
   SECTION("Shortest path 1 -> 30 on airport data exists") {
-    vector<int> expectedPathIds = {1, 5, 3361, 3728, 156, 30};
+    vector<int> expectedPathIds1 = {1, 5, 3361, 3728, 156, 30};
+    vector<int> expectedPathIds2 = {1, 5, 3320, 3484, 156, 30};
 
     Vertex airport1 = getAirportVertex(airportData, "1");
     Vertex airport30 = getAirportVertex(airportData, "30");
@@ -175,8 +206,9 @@ TEST_CASE("Test Dijkstra's") {
 
     REQUIRE(!path.empty());
 
-    vector<Vertex> expectedPath = getPath(airportData, expectedPathIds);
-    REQUIRE(path == expectedPath);
+    vector<Vertex> expectedPath1 = getPath(airportData, expectedPathIds1);
+    vector<Vertex> expectedPath2 = getPath(airportData, expectedPathIds2);
+    REQUIRE((path == expectedPath1 || path == expectedPath2));
   }
 
 }
@@ -188,7 +220,7 @@ TEST_CASE("Test A*") {
   vector<Vertex> airports = airportData.getVertices();
   REQUIRE(airports.size() == 7698);
 
-  SECTION("Simple graph") {
+  SECTION("Shortest path works on simple graph") {
     Graph h = createSimpleGraph();
     vector<Vertex> f = getShortestPathAStar(h, a, d);
     vector<Vertex> shortestPath1{a, b, d};
@@ -199,7 +231,7 @@ TEST_CASE("Test A*") {
 
   SECTION("Vertices with no path results in no shortest path") {
     // Make a graph with two vertices that have no path
-    // Run Dijkstra's on the two vertices
+    // Run A* on the two vertices
     // Check that the resulting vector is empty
     Graph g = createUnconnectedGraph();
     vector<Vertex> f = getShortestPathAStar(g, a, d);
@@ -208,7 +240,7 @@ TEST_CASE("Test A*") {
   }
 
   SECTION("If a == b, path should be length 1") {
-    // Run Dijkstra's with source == destination
+    // Run A* with source == destination
     Graph j = Graph(true, true);
     j.insertVertex(a);
     vector<Vertex> f = getShortestPathAStar(j, a, a);
@@ -250,7 +282,8 @@ TEST_CASE("Test A*") {
 
 
   SECTION("Shortest path 1 -> 30 on airport data exists") {
-    vector<int> expectedPathIds = {1, 5, 3361, 3728, 156, 30};
+    vector<int> expectedPathIds1 = {1, 5, 3361, 3728, 156, 30};
+    vector<int> expectedPathIds2 = {1, 5, 3320, 3484, 156, 30};
 
     Vertex airport1 = getAirportVertex(airportData, "1");
     Vertex airport30 = getAirportVertex(airportData, "30");
@@ -260,8 +293,39 @@ TEST_CASE("Test A*") {
 
     REQUIRE(!path.empty());
 
-    vector<Vertex> expectedPath = getPath(airportData, expectedPathIds);
-    REQUIRE(path == expectedPath);
+    vector<Vertex> expectedPath1 = getPath(airportData, expectedPathIds1);
+    vector<Vertex> expectedPath2 = getPath(airportData, expectedPathIds2);
+    REQUIRE((path == expectedPath1 || path == expectedPath2));
+  }
+}
+
+// For each pair of airports i, j with i and j in [0, n],
+// check that Dijkstra's and A* reach the same output
+TEST_CASE("Verify correctness of shortest path algorithms") {
+  // Load in airport data
+  Graph airportData = getAirportTestingData();
+  vector<Vertex> airports = airportData.getVertices();
+  REQUIRE(airports.size() == 7698);
+
+  // # of airports to test on
+  // Note this is an O(n^2) operation:
+  // - 20 airports  = ~9s local runtime
+  // - 50 airports  = ~54s local runtime
+  // - 100 airports = ~3m52s local runtime
+  const int NUM_AIRPORTS = 10;
+
+  for (int i = 0; i < NUM_AIRPORTS; i++) {
+    for (int j = 0; j < NUM_AIRPORTS; j++) {
+      const Vertex& airport1 = airports[i];
+      const Vertex& airport2 = airports[j];
+
+      // Get the same path with Dijkstra's and A*
+      auto path_dj = getShortestPath(airportData, airport1, airport2);
+      auto path_astar = getShortestPathAStar(airportData, airport1, airport2);
+
+      // Verify that both paths are the same length
+      REQUIRE(path_dj.size() == path_astar.size());
+    }
   }
 }
 

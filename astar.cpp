@@ -1,13 +1,20 @@
 #include "astar.h"
 
 #include <set>
+#include <functional>
+#include <queue>
 #include <cfloat>
 
 using std::unordered_set;
 using std::unordered_map;
+using std::vector;
+using std::pair;
+using std::priority_queue;
 
 // Written using pseudocode from the following source:
 // https://en.wikipedia.org/wiki/A*_search_algorithm
+
+const double EARTH_RADIUS_KM = 6371.0;
 
 vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
                              const Vertex& dest) {
@@ -20,20 +27,31 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
 
   // f(n) = g(n) + h(n)
   unordered_map<Vertex, double> fScores;
+
+  // h(n) is estimated cost from n to dest
   fScores[src] = calculateHeuristic(src, dest);
 
   // The open list of vertices that must be explored
-  unordered_set<Vertex> openList;
-  openList.insert(src);
+  // unordered_set<Vertex> openList;
+  // openList.insert(src);
 
-  while (!openList.empty()) {
-    Vertex current = findVertexOfLowestF(openList, fScores);
+  priority_queue<pair<double, Vertex>, vector<pair<double, Vertex>>, std::greater<pair<double, Vertex>>> openSet;
+  unordered_set<Vertex> openSetItems;
+  openSet.push({ fScores[src], src });
+  openSetItems.insert(src);
 
+  while (!openSet.empty()) {
+    // Vertex current = findVertexOfLowestF(openList, fScores);
+    Vertex current = openSet.top().second;
+
+    // If destination is reached, return path
     if (current == dest) {
       return reconstructPath(cameFrom, dest);
     }
 
-    openList.erase(current);
+    // openList.erase(current);
+    openSet.pop();
+    openSetItems.erase(current);
     for (const Vertex& neighbor : graph.getAdjacent(current)) {
       double gCurrent = gScores[current] + graph.getEdgeWeight(current, neighbor);
 
@@ -42,12 +60,18 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
         gScores[neighbor] = DBL_MAX;
       }
 
+      // If neighbor n has a better g(n), add it to the list to check later
       if (gCurrent < gScores[neighbor]) {
         cameFrom[neighbor] = current;
         gScores[neighbor] = gCurrent;
+        // f(n) = g(n) + h(n). This is the key difference from Dijkstra's
         fScores[neighbor] = gScores[neighbor] + calculateHeuristic(current, dest);
-        if (openList.find(neighbor) == openList.end()) {
-          openList.insert(neighbor);
+        // if (openList.find(neighbor) == openList.end()) {
+        //   openList.insert(neighbor);
+        // }
+        if (openSetItems.find(neighbor) == openSetItems.end()) {
+          openSet.push({ fScores[neighbor], neighbor });
+          openSetItems.insert(neighbor);
         }
       }
     }
@@ -57,8 +81,8 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
 }
 
 double calculateHeuristic(const Vertex& src, const Vertex& dest) {
-  const double EARTH_RADIUS_KM = 6371.0;
   double distance = getOrthodromicDistance(src, dest);
+  // Divide by Earth's diameter to guarantee a value in range [0, 1]
   double h = distance / (2 * EARTH_RADIUS_KM);
   return h;
 }
@@ -75,7 +99,7 @@ Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
 }
 
 vector<Vertex> reconstructPath(const unordered_map<Vertex, Vertex>& cameFrom,
-                             const Vertex& dest) {
+                               const Vertex& dest) {
   vector<Vertex> path = { dest };
   Vertex current = dest;
 
@@ -92,6 +116,7 @@ long double degreesToRadians(const long double degree) {
   return (degree * 3.14 / 180);
 } 
 
+// https://stackoverflow.com/questions/10198985/calculating-the-distance-between-2-latitudes-and-longitudes-that-are-saved-in-a
 double getOrthodromicDistance(const Vertex& source, const Vertex& destination)  {
   double lat1r, lon1r, lat2r, lon2r, u, v;
   lat1r = degreesToRadians(source.latitude);
@@ -101,7 +126,6 @@ double getOrthodromicDistance(const Vertex& source, const Vertex& destination)  
 
   u = sin((lat2r - lat1r)/2);
   v = sin((lon2r - lon1r)/2);
-  const double EARTH_RADIUS_KM = 6371.0;
   double distance = 2.0 * EARTH_RADIUS_KM * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v));
   return distance;
 }
