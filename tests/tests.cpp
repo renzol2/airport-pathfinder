@@ -298,7 +298,6 @@ TEST_CASE("Test BFS") {
   g.insertEdge(v, u);
   g.insertEdge(x, t);
   g.insertEdge(w, s);
-  //
   g.insertEdge(r, y);
   g.insertEdge(q, y);
   g.insertEdge(u, v);
@@ -307,10 +306,6 @@ TEST_CASE("Test BFS") {
 
   vector<Vertex> output = BFS(g, 1);
   vector<Vertex> result{z, w, x, y, s, t, v, q, r, u};
-  
-  // for (auto & v : output) {
-  //   cout << v.label << endl;
-  // }
 
   REQUIRE(output.size() == 10);
   REQUIRE(output == result);

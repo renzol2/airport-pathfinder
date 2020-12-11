@@ -7,41 +7,30 @@
 #include <map>
 #include <queue>
 
-// struct orderByDist {
-//     orderByDist(std::map<Vertex, double> input) {
-//         this->distance = input;
-//     } 
-// 	bool operator()(Vertex const& a, Vertex const& b) {
-// 		return distance[a] > distance[b];
-// 	}
-//     std::map<Vertex, double> distance;
-// };
-
 vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex & dest) {
 
+    // Maps a vertex to its distance from the source
+	std::map<Vertex, double> distance;
+    // Maps a vertex to its predecessor
+	std::map<Vertex, Vertex> predecessor;
+    // Contains the shortest path to return at the end
     std::vector<Vertex> path;
 
-	std::map<Vertex, double> distance;
-	std::map<Vertex, Vertex> predecessor;
-
+    // Initially populate each vertex's distance to infinity
 	for (Vertex v : g.getVertices()) {
-		distance[v] = std::numeric_limits<double>::infinity();	// maybe this doesnt work
+		distance[v] = std::numeric_limits<double>::infinity();
 	}
+    // Set src distance to 0 to give it priority
 	distance[src] = 0;
 
     std::priority_queue<std::pair<double, Vertex>, vector<std::pair<double, Vertex>>, std::greater<std::pair<double, Vertex>>> q;
-
-    // for (Vertex v : g.getVertices()) {
-    //     q.push(v);
-    // }
-
     q.push(std::make_pair(0, src));
 
 	while (q.size()) {
 		Vertex u = q.top().second;
 		q.pop();
         
-        if (u == dest) { break; }
+        if (u == dest) { break; } // If we've found a best path, stop the search
 		for (Vertex v : g.getAdjacent(u)) {
             if (distance[u] + g.getEdgeWeight(u, v) < distance[v]) {
                 distance[v] = distance[u] + g.getEdgeWeight(u, v);
@@ -51,6 +40,7 @@ vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex
         }
 	} 
 
+    // Backtrack through predecessors to set the (inverted) shortest path
     Vertex temp = dest;
     while (predecessor.find(temp) != predecessor.end()) {
         path.push_back(temp);
