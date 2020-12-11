@@ -23,6 +23,11 @@ double calculateHeuristic(const Vertex& src, const Vertex& dest);
 
 /**
  * Finds the vertex in the open list with the lowest f score
+ * NOTE: this function is now unused since the current implementation
+ * of A* now uses a priority queue instead of an unordered set. This
+ * function caused A*'s runtime to be higher than Dijkstra's before
+ * changing the implementation. I thought I'd leave it in to show
+ * our progress.
  */
 Vertex findVertexOfLowestF(const unordered_set<Vertex>& openList,
                            const unordered_map<Vertex, double>& f);

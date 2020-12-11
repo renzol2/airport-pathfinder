@@ -31,12 +31,11 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
   // h(n) is estimated cost from n to dest
   fScores[src] = calculateHeuristic(src, dest);
 
-  // The open list of vertices that must be explored
-  // unordered_set<Vertex> openList;
-  // openList.insert(src);
-
+  // The queue of vertices that must be explored
   priority_queue<pair<double, Vertex>, vector<pair<double, Vertex>>, std::greater<pair<double, Vertex>>> openSet;
+  // A duplicate container of vertices as the priority queue. Used for searching
   unordered_set<Vertex> openSetItems;
+  
   openSet.push({ fScores[src], src });
   openSetItems.insert(src);
 
@@ -49,9 +48,9 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
       return reconstructPath(cameFrom, dest);
     }
 
-    // openList.erase(current);
     openSet.pop();
     openSetItems.erase(current);
+
     for (const Vertex& neighbor : graph.getAdjacent(current)) {
       double gCurrent = gScores[current] + graph.getEdgeWeight(current, neighbor);
 
@@ -66,9 +65,9 @@ vector<Vertex> getShortestPathAStar(const Graph& graph, const Vertex& src,
         gScores[neighbor] = gCurrent;
         // f(n) = g(n) + h(n). This is the key difference from Dijkstra's
         fScores[neighbor] = gScores[neighbor] + calculateHeuristic(current, dest);
-        // if (openList.find(neighbor) == openList.end()) {
-        //   openList.insert(neighbor);
-        // }
+
+        // This is where the openSet map comes in; searching for neighbors
+        // Probably not the best implementation
         if (openSetItems.find(neighbor) == openSetItems.end()) {
           openSet.push({ fScores[neighbor], neighbor });
           openSetItems.insert(neighbor);
