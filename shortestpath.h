@@ -7,8 +7,3 @@
  * using Dijkstra's Algorithm.
  */
 vector<Vertex> getShortestPath(const Graph & g, const Vertex & src, const Vertex & dest);
-
-/**
- * 
- */
-
